@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fluid Simulation</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Visible content goes here -->
+
+    <!--Aplication Header-->
+    <div id="app-header">
+        <h1>Fluid Simulation Page</h1>
+    </div>
+
+
+    <!--fluid simulation container-->
+    <div id="fluid-simulation-container">
+        <canvas id="fluid-simulation-canvas" width="800" height="500" style="border:1px solid #000000;">
+            Your browser does not support the HTML5 canvas tag.
+        </canvas>
+    </div>
+
+    <!--fluid simulation control dials-->
+    <div id="fluid-simulation-controls">
+        <label>Base Heat</label>>
+        <input type="range" id="base-heat" name="base-heat" min="0" max="100" value="50">
+        <label>Fluid Viscosity</label>
+        <input type="range" id="fluid-viscosity" name="fluid-viscosity" min="0" max="100" value="50">
+        <label>Particle Size</label>
+        <input type="range" id="particle-size" name="particle-size" min="1" max="20" value="5">
+        <label>Air Resistance</label>
+        <input type="range" id="air-resistance" name="air-resistance" step="0.001" min="0" max="1" value=".0005">
+        <label>Gravity</label>
+        <input type="range" id="gravity" name="gravity" step="0.001" min="0" max="1" value=".1">
+        <label>Particle Radius</label>
+        <input type="range" id="particle-radius" name="particle-radius" min="1" max="15" value="5">
+    </div>
+
+    <!--execute main JS page-->
+    <script type="module" src="js/main.js"></script>
+
+</body>
+</html>
