@@ -6,19 +6,45 @@ import Barrier from './barrier.js';
 const canvas = document.getElementById("fluid-simulation-canvas");
 const ctx = canvas.getContext("2d");
 
-//Create objects
-const barriers = [new Barrier(0, 200, 700, 20)];
-const particle1 = new Particle(50, 50, 100, barriers);
+//Create map (cup)
 
-//Assign veriables about properties of the particles
+const barriers = [new Barrier(200, 250, 10, 100),
+    new Barrier(370, 250, 10, 100),
+    new Barrier(200, 350, 170, 10),];
 
+
+//Create particles
+const particles = [];
+for(let i = 0; i < 50; i++){
+    let x = Math.random() * (370 - 200) + 200;
+    let y = Math.random() * 250;
+    particles.push(new Particle(x, y, 100, barriers, particles, gravity));
+}
+
+
+// Update all slider values
+updateSliderValue('base-heat', 'base-heat-value');
+updateSliderValue('fluid-viscosity', 'fluid-viscosity-value');
+updateSliderValue('air-resistance', 'air-resistance-value');
+updateSliderValue('gravity', 'gravity-value');
+updateSliderValue('particle-radius', 'particle-radius-value');
 
  //Background
 ctx.fillStyle = "lightgrey";
 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-//Draw the particle
-particle1.drawParticle(ctx);
+// Function to update slider values
+function updateSliderValue(sliderId, valueId) {
+    const slider = document.getElementById(sliderId);
+    const valueSpan = document.getElementById(valueId);
+    valueSpan.textContent = slider.value;
+    slider.addEventListener('input', () => {
+        valueSpan.textContent = slider.value;
+    });
+}
+
+
+
 
 //render 
 function render() {
@@ -30,15 +56,19 @@ function render() {
     for (let barrier of barriers) {
         barrier.drawBarrier(ctx);
     }
-    //Draw particle
-    particle1.drawParticle(ctx);
+    //Draw particles
+    for(let particle of particles){
+        particle.drawParticle(ctx);
+    }
 }
 
 
 //Game loop
 function gameLoop() {
     //Update particle position based on velocity
-    particle1.step();
+    for(let particle of particles){
+        particle.step();
+    }
     render();
     window.requestAnimationFrame(gameLoop);
 }
