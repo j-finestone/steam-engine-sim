@@ -8,12 +8,13 @@ class Particle {
     XVelocity = 0;
     YVelocity = 0;
     
-
     //Constructor
     constructor(x, y, heat) {
         this.x = x;
         this.y = y;
         this.heat = heat;
+        this.shape = "circle";
+        this.radius = 5;
 
         this.updateVariables();
     }
@@ -38,19 +39,21 @@ class Particle {
         and if it encounters a particle it reverses both their speed*/
         for (let i=0; i<Math.abs(this.XVelocity); i++) {
             let futureXPos = this.x + Math.sign(this.XVelocity);
-            let colidedParticle = Collision.circleCollision(this, futureXPos, this.y);
-            if (Collision.rectCollision(this, futureXPos, this.y)) {
-                this.XVelocity = -this.XVelocity/2;
-            } else if (colidedParticle) {
+            let collidedObject = Collision.isColliding(this, futureXPos, this.y);
+            if (collidedObject!=false) {
+                if (collidedObject[0].shape === "rectangle") {
+                    //Make it bounce off the rectangle
+                    this.XVelocity = -this.XVelocity/2;
+                } else if (collidedObject[0].shape === "circle") {
+                    
+                    //Make it bounce of the particle
+                    this.XVelocity = Collision.particleColisionVelocity(this, collidedObject[0]).x
+                    this.YVelocity = Collision.particleColisionVelocity(this, collidedObject[0]).y
 
-                //Make it bounce of the particle
-                this.XVelocity = Collision.particleColisionVelocity(this, colidedParticle[0]).x
-                this.YVelocity = Collision.particleColisionVelocity(this, colidedParticle[0]).y
-
-                //Make other particle bounce
-                colidedParticle[0].XVelocity = Collision.particleColisionVelocity(colidedParticle[0], this).x
-                colidedParticle[0].YVelocity = Collision.particleColisionVelocity(colidedParticle[0], this).y
-
+                    //Make other particle bounce
+                    collidedObject[0].XVelocity = Collision.particleColisionVelocity(collidedObject[0], this).x
+                    collidedObject[0].YVelocity = Collision.particleColisionVelocity(collidedObject[0], this).y
+                }
             } else {
                 this.x += Math.sign(this.XVelocity);
             }
@@ -61,19 +64,24 @@ class Particle {
         if it encounters a particle it reverses both their speed*/ 
         for (let i=0; i<Math.abs(this.YVelocity); i++) {
             let futureYPos = this.y + Math.sign(this.YVelocity);
-            let colidedParticle = Collision.circleCollision(this, this.x, futureYPos);
-            if (Collision.rectCollision(this, this.x, futureYPos)) {
-                this.YVelocity = -this.YVelocity/2;
-            } else if (colidedParticle) {
+            let collidedObject = Collision.isColliding(this, this.x, futureYPos);
+            if (collidedObject!==false) {
+                if (collidedObject[0].shape === "rectangle") {
+                    //Make it bounce off the rectangle
+                    this.YVelocity = -this.YVelocity/2;
 
-                //Make this particle bounce
-                this.XVelocity = Collision.particleColisionVelocity(this, colidedParticle[0]).x
-                this.YVelocity = Collision.particleColisionVelocity(this, colidedParticle[0]).y
+                } else if (collidedObject[0].shape === "circle") {
 
-                //Make other particle bounce
-                colidedParticle[0].XVelocity = Collision.particleColisionVelocity(colidedParticle[0], this).x
-                colidedParticle[0].YVelocity = Collision.particleColisionVelocity(colidedParticle[0], this).y
-                
+
+                    //Make this particle bounce
+                    this.XVelocity = Collision.particleColisionVelocity(this, collidedObject[0]).x
+                    this.YVelocity = Collision.particleColisionVelocity(this, collidedObject[0]).y
+
+                    //Make other particle bounce
+                    collidedObject[0].XVelocity = Collision.particleColisionVelocity(collidedObject[0], this).x
+                    collidedObject[0].YVelocity = Collision.particleColisionVelocity(collidedObject[0], this).y
+                }
+
             } else {
                 this.y += Math.sign(this.YVelocity);
             }

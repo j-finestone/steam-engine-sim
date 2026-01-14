@@ -1,15 +1,14 @@
 //A barrier is a rectangular object that particles cannot pass through
 export default class Barrier {
 
-    //Static properties
-    static shape = "rectangle";
-    
     //variables
     constructor(x, y, width, height) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
+
+        this.shape = "rectangle";
     }
 
     //draw barrier method

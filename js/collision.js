@@ -21,7 +21,38 @@ class Collision {
         }
     }
 
+    //Check if object1, and its possition, and gets all particles it is colliding with
+    static isColliding(object1, x, y) {
 
+        let collidedObjects = [];
+        //For circle colliding with an object
+        if (object1.shape === "circle") {
+            
+            //Check for circle collisions
+            let collidingCircles = Collision.circleCollision(object1, x, y);
+            if (collidingCircles !== false) {
+                collidedObjects.push(...collidingCircles);
+            }
+            //Check for rect Collisions
+            let collidingRectangles = Collision.rectCollision(object1, x, y);
+            if (collidingRectangles !== false) {
+                collidedObjects.push(...collidingRectangles);
+            }
+
+        } else if (object1.shape === "rectangle") {
+            
+            let collidingRectangles = Collision.rectCollision(object1, x, y);
+            if (collidingRectangles !== false) {
+                collidedObjects.push(...collidingRectangles);
+            }
+        }
+
+        if (collidedObjects.length > 0) {
+            return collidedObjects;
+        } else {
+            return false;
+        }
+    }
 
     // Check collision with other particles
     //Returns list of particles collided with
