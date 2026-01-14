@@ -1,25 +1,14 @@
 //Imports
-import Particle from './particle.js';
-import Barrier from './barrier.js';
+import MapGenerator from './mapGenorator.js';
 
 //Get canvas and context
 const canvas = document.getElementById("fluid-simulation-canvas");
 const ctx = canvas.getContext("2d");
 
-//Create map (cup)
-
-const barriers = [new Barrier(200, 250, 10, 100),
-    new Barrier(370, 250, 10, 100),
-    new Barrier(200, 350, 170, 10),];
-
-
-//Create particles
-const particles = [];
-for(let i = 0; i < 50; i++){
-    let x = Math.random() * (370 - 200) + 200;
-    let y = Math.random() * 250;
-    particles.push(new Particle(x, y, 100, barriers, particles, gravity));
-}
+//Create map 
+const mapGenerator = new MapGenerator(ctx, document.getElementById("gravity").value);
+const barriers = mapGenerator.generateCup();
+const particles = mapGenerator.generateParticles(barriers, document.getElementById("gravity").value);
 
 
 // Update all slider values
@@ -28,6 +17,9 @@ updateSliderValue('fluid-viscosity', 'fluid-viscosity-value');
 updateSliderValue('air-resistance', 'air-resistance-value');
 updateSliderValue('gravity', 'gravity-value');
 updateSliderValue('particle-radius', 'particle-radius-value');
+updateSliderValue('simulation-speed', 'simulation-speed-value');
+
+
 
  //Background
 ctx.fillStyle = "lightgrey";
@@ -62,14 +54,45 @@ function render() {
     }
 }
 
+//Reset Simulation
+function resetSimulation() {
+    //Delete existing particles and barriers
+    particles.length = 0; // Clear existing particles
+    barriers.length = 0; // Clear existing barriers
+
+    //Create new map
+    const newBarriers = mapGenerator.generateCup();
+    barriers.push(...newBarriers); // Add new barriers
+
+    //Create new particles
+    const newParticles = mapGenerator.generateParticles(barriers, document.getElementById("gravity").value);
+    particles.push(...newParticles); // Add new particles
+
+}
+
 
 //Game loop
-function gameLoop() {
+function gameLoop() {   
+
+    //Check for reset button click
+    const resetButton = document.getElementById("reset-simulation-button");
+    resetButton.onclick = () => {
+        resetSimulation(); //Reset simulation
+    };
+
     //Update particle position based on velocity
     for(let particle of particles){
         particle.step();
     }
     render();
-    window.requestAnimationFrame(gameLoop);
+
+    
+    let simulationSpeed = document.getElementById("simulation-speed").value;
+    
+    setTimeout(() => {
+        window.requestAnimationFrame(gameLoop);
+    }, simulationSpeed);
+
+
 }
 window.requestAnimationFrame(gameLoop);
