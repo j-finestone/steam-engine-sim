@@ -1,10 +1,12 @@
+import MapGenerator from './mapGenorator.js';
+
 class Collision {
 
     // Check collision with barriers
     //returns list of barriers collided with
-    static checkBarrierCollision(particle, x, y, barriers) {
+    static rectCollision(particle, x, y) {
         let barrierCollisions = [];
-        for (let barrier of barriers) {
+        for (let barrier of MapGenerator.barriers) {
             if (x > barrier.x - particle.radius && x < barrier.x + barrier.width &&
                 y > barrier.y - particle.radius && y < barrier.y + barrier.height) {
                     barrierCollisions.push(barrier);
@@ -20,17 +22,24 @@ class Collision {
     }
 
 
+
     // Check collision with other particles
     //Returns list of particles collided with
-    static checkParticleCollision(particle, x, y, particles) {
-        for (let i = 0; i < particles.length; i++) {
-            if (particles[i] === particle) continue;
-            let dx = x - particles[i].x;
-            let dy = y - particles[i].y;
+    static circleCollision(particle, x, y) {
+        let collidedParticles = [];
+        for (let i = 0; i < MapGenerator.particles.length; i++) {
+            if (MapGenerator.particles[i] === particle) continue;
+            let dx = x - MapGenerator.particles[i].x; //x distance between the two particles
+            let dy = y - MapGenerator.particles[i].y; //y distance between the two particles
             let distance = Math.sqrt(dx * dx + dy * dy);
-            if (distance < particle.radius / 2 + particles[i].radius / 2){
-                return particles[i];
+            if (distance < particle.radius + MapGenerator.particles[i].radius) { 
+                collidedParticles.push(MapGenerator.particles[i]);
             }
+        }
+        if (collidedParticles.length>0) {
+            return collidedParticles;
+        } else {
+            return false;
         }
     }
 

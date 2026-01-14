@@ -1,28 +1,21 @@
 import Barrier from "./barrier.js";
 import Collision from "../Collision.js";
+import MapGenerator from "../mapGenorator.js";
 
 //Particle class
-class Particle {
-
-    //Asign properties
-    airResistance = 0;
-    viscosity = 0.5;
-    radius = 10
-    gravity = 0.1
-
+class Particle { 
     //Variables
     XVelocity = 0;
     YVelocity = 0;
-    angle = Math.atan2(this.Yvelocity, this.Xvelocity);
-    barriers = [];
+    
 
     //Constructor
-    constructor(x, y, heat, barriers, particles) {
+    constructor(x, y, heat) {
         this.x = x;
         this.y = y;
         this.heat = heat;
-        this.barriers = barriers;
-        this.particles = particles;
+
+        this.updateVariables();
     }
     
 
@@ -45,29 +38,42 @@ class Particle {
         and if it encounters a particle it reverses both their speed*/
         for (let i=0; i<Math.abs(this.XVelocity); i++) {
             let futureXPos = this.x + Math.sign(this.XVelocity);
-            let colidedParticle = Collision.checkParticleCollision(this, futureXPos, this.y, this.particles);
-            if (Collision.checkBarrierCollision(this, futureXPos, this.y, this.barriers)) {
-                this.XVelocity = -this.XVelocity;
+            let colidedParticle = Collision.circleCollision(this, futureXPos, this.y);
+            if (Collision.rectCollision(this, futureXPos, this.y)) {
+                this.XVelocity = -this.XVelocity/2;
             } else if (colidedParticle) {
-                this.XVelocity = Collision.particleColisionVelocity(this, colidedParticle).x
-                this.YVelocity = Collision.particleColisionVelocity(this, colidedParticle).y
+
+                //Make it bounce of the particle
+                this.XVelocity = Collision.particleColisionVelocity(this, colidedParticle[0]).x
+                this.YVelocity = Collision.particleColisionVelocity(this, colidedParticle[0]).y
+
+                //Make other particle bounce
+                colidedParticle[0].XVelocity = Collision.particleColisionVelocity(colidedParticle[0], this).x
+                colidedParticle[0].YVelocity = Collision.particleColisionVelocity(colidedParticle[0], this).y
+
             } else {
                 this.x += Math.sign(this.XVelocity);
             }
             
         }
        /*Calculate new y by looping through each pixel of Yspeed, 
-        and if ot encounters a barrier, it reverses its speed, and
+        and if it encounters a barrier, it reverses its speed, and
         if it encounters a particle it reverses both their speed*/ 
         for (let i=0; i<Math.abs(this.YVelocity); i++) {
             let futureYPos = this.y + Math.sign(this.YVelocity);
-            let colidedParticle = Collision.checkParticleCollision(this, this.x, futureYPos, this.particles);
-            if (Collision.checkBarrierCollision(this, this.x, futureYPos, this.barriers)) {
-                this.YVelocity = -this.YVelocity;
+            let colidedParticle = Collision.circleCollision(this, this.x, futureYPos);
+            if (Collision.rectCollision(this, this.x, futureYPos)) {
+                this.YVelocity = -this.YVelocity/2;
             } else if (colidedParticle) {
 
-                this.XVelocity = Collision.particleColisionVelocity(this, colidedParticle).x
-                this.YVelocity = Collision.particleColisionVelocity(this, colidedParticle).y
+                //Make this particle bounce
+                this.XVelocity = Collision.particleColisionVelocity(this, colidedParticle[0]).x
+                this.YVelocity = Collision.particleColisionVelocity(this, colidedParticle[0]).y
+
+                //Make other particle bounce
+                colidedParticle[0].XVelocity = Collision.particleColisionVelocity(colidedParticle[0], this).x
+                colidedParticle[0].YVelocity = Collision.particleColisionVelocity(colidedParticle[0], this).y
+                
             } else {
                 this.y += Math.sign(this.YVelocity);
             }
@@ -86,9 +92,9 @@ class Particle {
     }
 
     deleteParticle() {
-        const index = this.particles.indexOf(this);
+        const index = MapGenerator.particles.indexOf(this);
         if (index > -1) {
-            this.particles.splice(index, 1);
+            MapGenerator.particles.splice(index, 1);
         }
     }
 
@@ -97,10 +103,10 @@ class Particle {
     updateVariables() {
         //Update angle
         this.angle = Math.atan2(this.Yvelocity, this.Xvelocity);
-        this.airResistance = document.getElementById("air-resistance").value;
-        this.viscosity = document.getElementById("fluid-viscosity").value;
-        this.radius = document.getElementById("particle-radius").value;
-        this.gravity = document.getElementById("gravity").value;
+        this.airResistance = Number(document.getElementById("air-resistance").value);
+        this.viscosity = Number(document.getElementById("fluid-viscosity").value);
+        this.radius = Number(document.getElementById("particle-radius").value);
+        this.gravity = Number(document.getElementById("gravity").value);
     }
 
     //Update velocity method
@@ -111,8 +117,13 @@ class Particle {
 
 
         //Apply gravity
-        this.YVelocity += this.gravity*2;
+        //Only apply gravity if it is not on the ground with velocity facing downwards
+        const isGrounded = Collision.rectCollision(this, this.x, this.y+1);
+        
 
+        if (!isGrounded) {
+            this.YVelocity += this.gravity;
+        }
 
     }
 

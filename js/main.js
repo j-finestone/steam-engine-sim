@@ -5,11 +5,20 @@ import MapGenerator from './mapGenorator.js';
 const canvas = document.getElementById("fluid-simulation-canvas");
 const ctx = canvas.getContext("2d");
 
-//Create map 
-const mapGenerator = new MapGenerator(ctx, document.getElementById("gravity").value);
-const barriers = mapGenerator.generateCup();
-const particles = mapGenerator.generateParticles(barriers, document.getElementById("gravity").value);
+//Get all UI elements globally
+const uiElements = {
+    gravity: document.getElementById("gravity"),
+    baseHeat: document.getElementById("base-heat"),
+    fluidViscosity: document.getElementById("fluid-viscosity"),
+    airResistance: document.getElementById("air-resistance"),
+    particleRadius: document.getElementById("particle-radius"),
+    simulationSpeed: document.getElementById("simulation-speed"),
+    resetButton: document.getElementById("reset-simulation-button")
+};
 
+//Create map 
+const mapGenerator = new MapGenerator(ctx, uiElements.gravity.value);
+mapGenerator.generateMap();
 
 // Update all slider values
 updateSliderValue('base-heat', 'base-heat-value');
@@ -45,11 +54,11 @@ function render() {
     ctx.fillStyle = "lightgrey";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     //draw barriers
-    for (let barrier of barriers) {
+    for (let barrier of MapGenerator.barriers) {
         barrier.drawBarrier(ctx);
     }
     //Draw particles
-    for(let particle of particles){
+    for(let particle of MapGenerator.particles){
         particle.drawParticle(ctx);
     }
 }
@@ -57,37 +66,30 @@ function render() {
 //Reset Simulation
 function resetSimulation() {
     //Delete existing particles and barriers
-    particles.length = 0; // Clear existing particles
-    barriers.length = 0; // Clear existing barriers
+    MapGenerator.particles.length = 0; // Clear existing particles
+    MapGenerator.barriers.length = 0; // Clear existing barriers
 
-    //Create new map
-    const newBarriers = mapGenerator.generateCup();
-    barriers.push(...newBarriers); // Add new barriers
-
-    //Create new particles
-    const newParticles = mapGenerator.generateParticles(barriers, document.getElementById("gravity").value);
-    particles.push(...newParticles); // Add new particles
-
+    //Regenerate map
+    mapGenerator.generateMap();
 }
 
+
+//Setup reset button
+uiElements.resetButton.onclick = () => {
+    resetSimulation(); //Reset simulation
+};
 
 //Game loop
 function gameLoop() {   
 
-    //Check for reset button click
-    const resetButton = document.getElementById("reset-simulation-button");
-    resetButton.onclick = () => {
-        resetSimulation(); //Reset simulation
-    };
-
     //Update particle position based on velocity
-    for(let particle of particles){
+    for(let particle of MapGenerator.particles){
         particle.step();
     }
     render();
 
     
-    let simulationSpeed = document.getElementById("simulation-speed").value;
+    let simulationSpeed = uiElements.simulationSpeed.value;
     
     setTimeout(() => {
         window.requestAnimationFrame(gameLoop);
