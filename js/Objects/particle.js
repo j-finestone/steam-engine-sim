@@ -1,10 +1,16 @@
 import Barrier from "./barrier.js";
 import Collision from "../Collision.js";
 import MapGenerator from "../mapGenorator.js";
-import Motion from "../motion.js";
+import Motion from "../Motion.js";
 
 //Particle class
 class Particle { 
+    //Static simulation variables (updated globally in main.js)
+    static gravity = 0.1;
+    static airResistance = .1;
+    static viscosity = 0.5;
+    static radius = 10;
+    
     //Variables
     XVelocity = 0;
     YVelocity = 0;
@@ -15,17 +21,13 @@ class Particle {
         this.y = y;
         this.heat = heat;
         this.shape = "circle";
-        this.radius = 5;
-
-        this.updateVariables();
     }
     
 
     //move particle method
     step() {
         //Functions
-        this.updateVariables();
-        Motion.updateSpeed(this);
+        Motion.updateVelocity(this);
         Motion.applySpeed(this);
 
     }
@@ -36,7 +38,7 @@ class Particle {
         ctx.beginPath();
         
         //Draw circle at the particle's position
-        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.arc(this.x, this.y, Particle.radius, 0, Math.PI * 2);
         ctx.fill();
     }
 
@@ -45,17 +47,6 @@ class Particle {
         if (index > -1) {
             MapGenerator.particles.splice(index, 1);
         }
-    }
-
-    
-    //Update variables method
-    updateVariables() {
-        //Update angle
-        this.angle = Math.atan2(this.Yvelocity, this.Xvelocity);
-        this.airResistance = Number(document.getElementById("air-resistance").value);
-        this.viscosity = Number(document.getElementById("fluid-viscosity").value);
-        this.radius = Number(document.getElementById("particle-radius").value);
-        this.gravity = Number(document.getElementById("gravity").value);
     }
 
 }

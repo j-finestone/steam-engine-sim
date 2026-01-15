@@ -25,14 +25,14 @@ class MapGenerator {
     generateCup() {
         //Create map (cup)
         MapGenerator.barriers = [new Barrier(200, 250, 10, 100),
-            new Barrier(370, 250, 10, 100),
-            new Barrier(200, 350, 170, 10)];
+            new Barrier(370, 250, 10, 100, false),
+            new Barrier(200, 350, 170, 10, false)];
         return MapGenerator.barriers;
     }
 
 
     //Generate Particles
-    generateParticles(barriers, gravity) {
+    generateParticles() {
         MapGenerator.particles = [];
         let iterations = 0
         for(let i = 0; i < 50; i++) {
@@ -41,7 +41,7 @@ class MapGenerator {
             MapGenerator.particles.push(new Particle(x, y, 100));
 
            //Prevent particles from spawning inside barriers or particle
-           if (Collision.rectCollision(MapGenerator.particles[i], x, y) || Collision.circleCollision(MapGenerator.particles[i], x, y)) {
+           if (Collision.isRectCollision(MapGenerator.particles[i], x, y) || Collision.isCircleCollision(MapGenerator.particles[i], x, y)) {
                 MapGenerator.particles[i].deleteParticle();
                 i--;
            }

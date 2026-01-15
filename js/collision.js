@@ -1,14 +1,15 @@
 import MapGenerator from './mapGenorator.js';
+import Particle from './Objects/particle.js';
 
 class Collision {
 
     // Check collision with barriers
     //returns list of barriers collided with
-    static rectCollision(particle, x, y) {
+    static isRectCollision(particle, x, y) {
         let barrierCollisions = [];
         for (let barrier of MapGenerator.barriers) {
-            if (x + particle.radius > barrier.x && x - particle.radius < barrier.x + barrier.width &&
-            y + particle.radius > barrier.y && y - particle.radius < barrier.y + barrier.height) {
+            if (x + Particle.radius > barrier.x && x - Particle.radius < barrier.x + barrier.width &&
+            y + Particle.radius > barrier.y && y - Particle.radius < barrier.y + barrier.height) {
                 barrierCollisions.push(barrier);
             }
         }
@@ -29,19 +30,19 @@ class Collision {
         if (object1.shape === "circle") {
             
             //Check for circle collisions
-            let collidingCircles = Collision.circleCollision(object1, x, y);
+            let collidingCircles = Collision.isCircleCollision(object1, x, y);
             if (collidingCircles !== false) {
                 collidedObjects.push(...collidingCircles);
             }
             //Check for rect Collisions
-            let collidingRectangles = Collision.rectCollision(object1, x, y);
+            let collidingRectangles = Collision.isRectCollision(object1, x, y);
             if (collidingRectangles !== false) {
                 collidedObjects.push(...collidingRectangles);
             }
 
         } else if (object1.shape === "rectangle") {
             
-            let collidingRectangles = Collision.rectCollision(object1, x, y);
+            let collidingRectangles = Collision.isRectCollision(object1, x, y);
             if (collidingRectangles !== false) {
                 collidedObjects.push(...collidingRectangles);
             }
@@ -56,14 +57,14 @@ class Collision {
 
     // Check collision with other particles
     //Returns list of particles collided with
-    static circleCollision(particle, x, y) {
+    static isCircleCollision(particle, x, y) {
         let collidedParticles = [];
         for (let i = 0; i < MapGenerator.particles.length; i++) {
             if (MapGenerator.particles[i] === particle) continue;
             let dx = x - MapGenerator.particles[i].x; //x distance between the two particles
             let dy = y - MapGenerator.particles[i].y; //y distance between the two particles
             let distance = Math.sqrt(dx * dx + dy * dy);
-            if (distance < particle.radius + MapGenerator.particles[i].radius) { 
+            if (distance < Particle.radius * 2) { 
                 collidedParticles.push(MapGenerator.particles[i]);
             }
         }
@@ -73,6 +74,48 @@ class Collision {
             return false;
         }
     }
+
+    //When a two objects collide
+    static onParticleCollision(object1, object2) {
+        //Calculate new velocities after collision
+
+        if (object1.shape === "rectangle") {
+            //Make it bounce off the rectangle
+            object1.XVelocity = -object1.XVelocity/2;
+            object1.YVelocity = -object1.YVelocity/2;
+
+
+        } 
+        if (object1.shape === "circle") {
+            //Make object react to collision
+            if (object2.shape === "circle") {
+                Collision.resolveCircleCollision(object1, object2);
+            }
+            if (object2.shape === "rectangle") {
+                //Make it bounce off the rectangle
+                object1.XVelocity = -object1.XVelocity/2;
+                object1.YVelocity = -object1.YVelocity/2;
+            }
+        }
+
+
+    }
+
+    // Resolve collision between two circles
+    static resolveCircleCollision(circle1, circle2) {
+
+        const newVelocity1 = Collision.particleColisionVelocity(circle1, circle2);
+        const newVelocity2 = Collision.particleColisionVelocity(circle2, circle1);
+
+        circle1.XVelocity = newVelocity1.x;
+        circle1.YVelocity = newVelocity1.y;
+        circle2.XVelocity = newVelocity2.x;
+        circle2.YVelocity = newVelocity2.y;
+    }
+
+
+
+
 
     //When a particle colides with another particle 
     static particleColisionVelocity(particle1, particle2) {

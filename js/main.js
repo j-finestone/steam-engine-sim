@@ -1,5 +1,6 @@
 //Imports
 import MapGenerator from './mapGenorator.js';
+import Particle from './Objects/particle.js';
 
 //Get canvas and context
 const canvas = document.getElementById("fluid-simulation-canvas");
@@ -79,8 +80,19 @@ uiElements.resetButton.onclick = () => {
     resetSimulation(); //Reset simulation
 };
 
+//Update simulation variables from UI
+function updateSimulationVariables() {
+    Particle.gravity = Number(uiElements.gravity.value);
+    Particle.airResistance = Number(uiElements.airResistance.value);
+    Particle.viscosity = Number(uiElements.fluidViscosity.value);
+    Particle.radius = Number(uiElements.particleRadius.value);
+}
+
 //Game loop
 function gameLoop() {   
+
+    //Update global simulation variables from UI
+    updateSimulationVariables();
 
     //Update particle position based on velocity
     for(let particle of MapGenerator.particles){

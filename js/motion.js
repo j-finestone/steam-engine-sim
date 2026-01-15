@@ -1,12 +1,13 @@
 import Collision from './Collision.js';
+import Particle from './Objects/particle.js';
 
 class Motion {
 
     //Update velocity method
-    static updateSpeed(object) {
+    static updateVelocity(object) {
         //Apply air resistance
-        object.XVelocity *= (1 - object.airResistance);
-        object.YVelocity *= (1 - object.airResistance);
+        object.XVelocity *= (1 - Particle.airResistance);
+        object.YVelocity *= (1 - Particle.airResistance);
 
 
         //Apply gravity
@@ -15,7 +16,7 @@ class Motion {
         
         //Round velocities to prevent micro-vibrations
         if (isGrounded) {
-            if (Math.abs(object.YVelocity) < 0.1) {
+            if (Math.abs(object.YVelocity) < 0.4) {
                 object.YVelocity = 0;
             }
             if (Math.abs(object.XVelocity) < 0.1) {
@@ -25,7 +26,7 @@ class Motion {
 
 
         if (!isGrounded) {
-            object.YVelocity += object.gravity;
+            object.YVelocity += Particle.gravity;
         }
     }
 
@@ -40,19 +41,10 @@ class Motion {
             let futureXPos = object.x + Math.sign(object.XVelocity);
             let collidedObject = Collision.isColliding(object, futureXPos, object.y);
             if (collidedObject!=false) {
-                if (collidedObject[0].shape === "rectangle") {
-                    //Make it bounce off the rectangle
-                    object.XVelocity = -object.XVelocity/2;
-                } else if (collidedObject[0].shape === "circle") {
-                    
-                    //Make it bounce of the particle
-                    object.XVelocity = Collision.particleColisionVelocity(object, collidedObject[0]).x
-                    object.YVelocity = Collision.particleColisionVelocity(object, collidedObject[0]).y
 
-                    //Make other particle bounce
-                    collidedObject[0].XVelocity = Collision.particleColisionVelocity(collidedObject[0], object).x
-                    collidedObject[0].YVelocity = Collision.particleColisionVelocity(collidedObject[0], object).y
-                }
+                //Make object react to collision
+                Collision.onParticleCollision(object, collidedObject[0]);
+                
             } else {
                 object.x += Math.sign(object.XVelocity);
             }
@@ -70,15 +62,9 @@ class Motion {
                     object.YVelocity = -object.YVelocity/2;
 
                 } else if (collidedObject[0].shape === "circle") {
-
-
+    
                     //Make this particle bounce
-                    object.XVelocity = Collision.particleColisionVelocity(object, collidedObject[0]).x
-                    object.YVelocity = Collision.particleColisionVelocity(object, collidedObject[0]).y
-
-                    //Make other particle bounce
-                    collidedObject[0].XVelocity = Collision.particleColisionVelocity(collidedObject[0], object).x
-                    collidedObject[0].YVelocity = Collision.particleColisionVelocity(collidedObject[0], object).y
+                    Collision.onParticleCollision(object, collidedObject[0]);
                 }
 
             } else {
@@ -87,6 +73,8 @@ class Motion {
         }
 
     }
+
+
 
 }
 
