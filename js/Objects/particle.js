@@ -126,8 +126,9 @@ class Particle {
 
         //Apply gravity
         //Only apply gravity if it is not on the ground with velocity facing downwards
-        const isGrounded = Collision.rectCollision(this, this.x, this.y+1);
+        const isGrounded = Collision.isColliding(this, this.x, this.y+1);
         
+
 
         if (!isGrounded) {
             this.YVelocity += this.gravity;

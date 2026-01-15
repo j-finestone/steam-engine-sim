@@ -7,9 +7,9 @@ class Collision {
     static rectCollision(particle, x, y) {
         let barrierCollisions = [];
         for (let barrier of MapGenerator.barriers) {
-            if (x > barrier.x - particle.radius && x < barrier.x + barrier.width &&
-                y > barrier.y - particle.radius && y < barrier.y + barrier.height) {
-                    barrierCollisions.push(barrier);
+            if (x + particle.radius > barrier.x && x - particle.radius < barrier.x + barrier.width &&
+            y + particle.radius > barrier.y && y - particle.radius < barrier.y + barrier.height) {
+                barrierCollisions.push(barrier);
             }
         }
 

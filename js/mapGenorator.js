@@ -35,7 +35,7 @@ class MapGenerator {
     generateParticles(barriers, gravity) {
         MapGenerator.particles = [];
         let iterations = 0
-        for(let i = 0; i < 25; i++) {
+        for(let i = 0; i < 50; i++) {
             let x = Math.random() * (370 - 200) + 200;
             let y = Math.random() * 250;
             MapGenerator.particles.push(new Particle(x, y, 100));
