@@ -1,6 +1,6 @@
 //Import classes
-import Particle from './Objects/particle.js';
-import Barrier from './Objects/barrier.js';
+import Particle from './Old Objects/particle.js';
+import Barrier from './Old Objects/barrier.js';
 import Collision from './Collision.js';
 //MapGenerator  class
 class MapGenerator {
@@ -23,11 +23,22 @@ class MapGenerator {
 
 
     generateCup() {
-        //Create map (cup)
-        MapGenerator.barriers = [new Barrier(200, 250, 10, 100, true),
-            new Barrier(370, 250, 10, 100, true),
-            new Barrier(200, 350, 170, 10, true)];
+        //Create engine map
+        MapGenerator.barriers = [];
+        
+
+        //Genorate particle container
+        MapGenerator.barriers.push(new Barrier(200, 250, 10, 100, true)) 
+        MapGenerator.barriers.push(new Barrier(370, 250, 10, 100, true))
+        MapGenerator.barriers.push(new Barrier(200, 350, 170, 10, true));
+
+        //Generate map (water canister, and pipe)
+
+
         return MapGenerator.barriers;
+
+     
+        
     }
 
 

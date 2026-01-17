@@ -9,6 +9,10 @@ FEATURES
 -colored particles to help demonstratre the heat
 -A system of dials to control the exact specs of th simulation
 
+Log of prossess
+-Original orgonazation plan wasnt working so I decided to develope an object higherarchy systems with components more similar to Unity
+
+
 TECHNOLOGIES
 -Javascript
 -HTML5 Canvas

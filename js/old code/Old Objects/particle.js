@@ -1,5 +1,5 @@
 import Barrier from "./barrier.js";
-import Collision from "../Collision.js";
+import Collision from "../collision.js";
 import MapGenerator from "../mapGenorator.js";
 import Motion from "../motion.js";
 import PhysicsObject from "./physicsObject.js";

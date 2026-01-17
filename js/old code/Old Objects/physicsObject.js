@@ -12,6 +12,7 @@ class PhysicsObject {
     shape = "circle";
     width = 0;
     height = 0;
+    mass=1
 
     constructor(x, y) {
         this.x = x;

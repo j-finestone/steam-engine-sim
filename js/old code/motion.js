@@ -1,4 +1,4 @@
-import Collision from './Collision.js';
+import Collision from './collision.js';
 import Particle from './Objects/particle.js';
 
 class Motion {

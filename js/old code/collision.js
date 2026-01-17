@@ -1,5 +1,5 @@
 import MapGenerator from './mapGenorator.js';
-import Particle from './Objects/particle.js';
+import Particle from './Old Objects/particle.js';
 
 class Collision {
 
