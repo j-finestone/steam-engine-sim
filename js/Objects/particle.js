@@ -2,35 +2,23 @@ import Barrier from "./barrier.js";
 import Collision from "../Collision.js";
 import MapGenerator from "../mapGenorator.js";
 import Motion from "../motion.js";
+import PhysicsObject from "./physicsObject.js";
 
 //Particle class
-class Particle { 
+class Particle extends PhysicsObject {
     //Static simulation variables (updated globally in main.js)
     static gravity = 0.1;
     static airResistance = .1;
     static viscosity = 0.5;
     static radius = 10;
     
-    //Variables
-    XVelocity = 0;
-    YVelocity = 0;
-    
     //Constructor
     constructor(x, y, heat) {
-        this.x = x;
-        this.y = y;
+        super(x, y);
         this.heat = heat;
         this.shape = "circle";
     }
     
-
-    //move particle method
-    step() {
-        //Functions
-        Motion.updateVelocity(this);
-        Motion.applyVelocity(this);
-
-    }
 
     //Draw particle method
     drawParticle(ctx) {
