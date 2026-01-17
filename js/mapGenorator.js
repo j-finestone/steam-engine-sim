@@ -24,9 +24,9 @@ class MapGenerator {
 
     generateCup() {
         //Create map (cup)
-        MapGenerator.barriers = [new Barrier(200, 250, 10, 100),
-            new Barrier(370, 250, 10, 100, false),
-            new Barrier(200, 350, 170, 10, false)];
+        MapGenerator.barriers = [new Barrier(200, 250, 10, 100, true),
+            new Barrier(370, 250, 10, 100, true),
+            new Barrier(200, 350, 170, 10, true)];
         return MapGenerator.barriers;
     }
 

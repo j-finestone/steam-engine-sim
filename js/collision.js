@@ -5,18 +5,23 @@ class Collision {
 
     // Check collision with barriers
     //returns list of barriers collided with
-    static isRectCollision(particle, x, y) {
-        let barrierCollisions = [];
+    static isRectCollision(x, y) {
+        let rectCollisions = [];
         for (let barrier of MapGenerator.barriers) {
+
+            //Skip checking collision with itself if its a barrier
+            if (barrier === this) continue;
+
+            //Check for collision
             if (x + Particle.radius > barrier.x && x - Particle.radius < barrier.x + barrier.width &&
             y + Particle.radius > barrier.y && y - Particle.radius < barrier.y + barrier.height) {
-                barrierCollisions.push(barrier);
+                rectCollisions.push(barrier);
             }
         }
 
         //return colliding barriers or false if there are none
-        if (barrierCollisions.length > 0) {
-            return barrierCollisions;
+        if (rectCollisions.length > 0) {
+            return rectCollisions;
         } else {
             return false;
         }
@@ -35,7 +40,7 @@ class Collision {
                 collidedObjects.push(...collidingCircles);
             }
             //Check for rect Collisions
-            let collidingRectangles = Collision.isRectCollision(object1, x, y);
+            let collidingRectangles = Collision.isRectCollision(x, y);
             if (collidingRectangles !== false) {
                 collidedObjects.push(...collidingRectangles);
             }

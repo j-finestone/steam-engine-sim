@@ -29,6 +29,14 @@ class Motion {
             object.YVelocity += Particle.gravity;
         }
         
+
+        //Make it so it doesnt move if velocity is locked 
+        if (object.YConstrained !== undefined && object.YConstrained) {
+            object.YVelocity = 0;
+        }
+        if (object.XConstrained !== undefined && object.XConstrained) {
+            object.XVelocity = 0;
+        }
     }
 
     //Makes object move based on velocity
