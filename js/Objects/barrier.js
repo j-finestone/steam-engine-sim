@@ -1,6 +1,6 @@
+import Motion from "../motion.js";
 //A barrier is a rectangular object that particles cannot pass through
 export default class Barrier {
-
     //variables
     constructor(x, y, width, height, YConstrained) {
         this.x = x;
@@ -19,8 +19,8 @@ export default class Barrier {
 
     //Step 
     step() {
-        Motion.updateSpeed(this);
-        Motion.applySpeed(this);
+        Motion.updateVelocity(this);
+        Motion.applyVelocity(this);
     }
 
     //draw barrier method

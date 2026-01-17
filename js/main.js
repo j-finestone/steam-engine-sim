@@ -94,9 +94,14 @@ function gameLoop() {
     //Update global simulation variables from UI
     updateSimulationVariables();
 
-    //Update particle position based on velocity
+    //Update particles
     for(let particle of MapGenerator.particles){
         particle.step();
+    }
+
+    //Update barriers
+    for (let barrier of MapGenerator.barriers) {
+        barrier.step();
     }
     render();
 

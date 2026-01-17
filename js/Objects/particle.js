@@ -1,7 +1,7 @@
 import Barrier from "./barrier.js";
 import Collision from "../Collision.js";
 import MapGenerator from "../mapGenorator.js";
-import Motion from "../Motion.js";
+import Motion from "../motion.js";
 
 //Particle class
 class Particle { 
@@ -28,7 +28,7 @@ class Particle {
     step() {
         //Functions
         Motion.updateVelocity(this);
-        Motion.applySpeed(this);
+        Motion.applyVelocity(this);
 
     }
 

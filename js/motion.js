@@ -23,15 +23,16 @@ class Motion {
                 object.XVelocity = 0;
             }
         }
-
-
+        
+        //Apply gravity
         if (!isGrounded) {
             object.YVelocity += Particle.gravity;
         }
+        
     }
 
     //Makes object move based on velocity
-    static applySpeed(object) {
+    static applyVelocity(object) {
         //Calculate new position
 
         /*Calculate new by looping through each pixel of Xspeed, 
