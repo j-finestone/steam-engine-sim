@@ -10,7 +10,9 @@ class Rectangle {
         this.ctx = this.canvas.getContext("2d")
     }
 
-    drawSelf(transform) {
+    drawSelf(self) {
+        //get transform
+        const transform = self.getComponent("Transform");
 
         //Generate square atributes
         const x = transform.x + this.x;

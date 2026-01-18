@@ -1,5 +1,6 @@
 class Transform {
-    constructor(x, y, width, height, rotation) {
+    constructor(self, x, y, width, height, rotation) {
+        this.self = self;
         this.x = x;
         this.y = y;
         this.width = width;

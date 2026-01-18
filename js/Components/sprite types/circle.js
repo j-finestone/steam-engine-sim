@@ -11,7 +11,8 @@ class Circle {
         this.ctx = this.canvas.getContext("2d")
     }
 
-    drawSelf(transform) {
+    drawSelf(self) {
+        const transform = self.getComponent("Transform");
 
         const x = transform.x + this.x;
         const y = transform.y + this.y;

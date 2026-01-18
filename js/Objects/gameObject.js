@@ -2,7 +2,7 @@ class GameObject {
     constructor(name) {
         this.name = name;
         this.components = [];
-        
+
         return this;
     }
 
@@ -17,7 +17,7 @@ class GameObject {
             this.components.splice(index, 1);
         }
     }
-
+    
     getComponent(componentName) {
         return this.components.find(c => c.constructor.name === componentName);
     }

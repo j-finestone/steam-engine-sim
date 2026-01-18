@@ -1,8 +1,8 @@
 class Renderer {
     spriteComponents = [];
-    constructor(transform) {
+    constructor(self) {
         this.spriteComponents = [];
-        this.transform = transform;
+        this.self = self;
     }
 
     addSpriteComponent(spriteComponent) {
@@ -10,13 +10,13 @@ class Renderer {
     }
 
     render() {
-        if (!this.transform) {
+        if (!this.self.getComponent("Transform")) {
             console.warn("Renderer has no transform component.");
             return;
         }
 
         this.spriteComponents.forEach(spriteComponent => {
-            spriteComponent.drawSelf(this.transform);
+            spriteComponent.drawSelf(this.self);
             
         });
     }
