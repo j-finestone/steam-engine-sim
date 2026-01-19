@@ -19,7 +19,6 @@ class UI {
         UI.simulationSpeedSlider = document.getElementById("simulation-speed");
         UI.resetButton = document.getElementById("reset-simulation-button");
         
-        UI.initializeSliderValues();
     }
 
     //Initialize slider display values
@@ -41,6 +40,7 @@ class UI {
             valueSpan.textContent = slider.value;
         });
     }
+
 }
 
 export default UI;
