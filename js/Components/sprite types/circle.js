@@ -1,3 +1,5 @@
+//Imports  
+import Globals from "../../globals.js";
 class Circle {
 
 
@@ -22,6 +24,14 @@ class Circle {
         this.ctx.arc(x, y, radius, 0, Math.PI * 2);
         this.ctx.fillStyle = this.color;
         this.ctx.fill();
+
+        //draw pivot origin
+        if (Globals.showPivotPoints) {
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, Globals.spriteComponentPivotPointRadius, 0, 2 * Math.PI);
+            this.ctx.fillStyle = Globals.spritePivotPointColor;
+            this.ctx.fill();
+        }
     }
 
 }

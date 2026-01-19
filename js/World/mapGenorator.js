@@ -18,9 +18,9 @@ class MapGenerator {
         // Generate initial map layout here 
 
         // Create cup
-        this.generateCup(100, 400, "maroon"); 
+        this.generateCup(200, 300, "maroon"); 
 
-        this.generateParticle(150, 350);
+        this.generateParticle(200, 250);
 
         // Set world reference for all components
         for (const gameObject of Globals.gameObjects) {
@@ -38,12 +38,13 @@ class MapGenerator {
 
     generateCup (x, y, color) {
         let barrier = World.addObject("Barrier");
-        barrier.addComponent(new Transform(barrier, x, y, 1, 1, 0));
+        barrier.addComponent(new Transform(barrier, x, y, 1, 1, 20));
         barrier.addComponent(new Renderer(barrier));
         // Add sprite components for the barrier
-        barrier.getComponent("Renderer").addSpriteComponent(new Rectangle(0, 0, 200, 10, color));
-        barrier.getComponent("Renderer").addSpriteComponent(new Rectangle(0, -90, 10, 100, color));
-        barrier.getComponent("Renderer").addSpriteComponent(new Rectangle(190, -90, 10, 100, color));
+
+        barrier.getComponent("Renderer").addSpriteComponent(new Rectangle(0, 50, 210, 10, 0, color));
+        barrier.getComponent("Renderer").addSpriteComponent(new Rectangle(-100, 0, 10, 100, 0, color));
+        barrier.getComponent("Renderer").addSpriteComponent(new Rectangle(100, 0, 10, 100, 0, color));
 
         //Add collider component for the barrier
         barrier.addComponent(new Collider(barrier));

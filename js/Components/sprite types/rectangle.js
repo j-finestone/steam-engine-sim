@@ -1,5 +1,8 @@
+//Imports  
+import Globals from "../../globals.js";
+
 class Rectangle {
-    constructor(x, y, width, height, color) {
+    constructor(x, y, width, height, rotation, color) {
         this.x = x;
         this.y = y;
         this.width = width;
@@ -21,9 +24,18 @@ class Rectangle {
         const height = transform.height * this.height;
 
         this.ctx.beginPath();
-        this.ctx.rect(x, y, width, height);
+        this.ctx.rect(x-width/2, y-height/2, width, height);
         this.ctx.fillStyle = this.color;
         this.ctx.fill();
+
+
+        //draw pivot origin
+        if (Globals.showPivotPoints) {
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, Globals.spriteComponentPivotPointRadius, 0, 2 * Math.PI);
+            this.ctx.fillStyle = Globals.spritePivotPointColor;
+            this.ctx.fill();
+        }
     }
 }
 

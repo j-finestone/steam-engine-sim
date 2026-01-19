@@ -1,3 +1,6 @@
+//Imports  
+import Globals from "../globals.js";
+
 class Renderer {
     spriteComponents = [];
     constructor(self) {
@@ -19,6 +22,18 @@ class Renderer {
             spriteComponent.drawSelf(this.self);
             
         });
+        //draw origin 
+        const transform = this.self.getComponent("Transform");
+
+        //get canvas context
+        this.canvas = document.getElementById("fluid-simulation-canvas");
+        this.ctx = this.canvas.getContext("2d")
+        if (Globals.showPivotPoints && transform) {
+            this.ctx.beginPath();
+            this.ctx.arc(transform.x, transform.y, Globals.objectPivotPointRadius, 0, 2 * Math.PI);
+            this.ctx.fillStyle = Globals.objectPivotPointColor;
+            this.ctx.fill();
+        }
     }
 
     step () {
