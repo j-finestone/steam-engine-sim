@@ -22,7 +22,7 @@ class Renderer {
     }
 
     step () {
-        render();
+        this.render();
     }
 }
 

@@ -1,5 +1,6 @@
 import MapGenerator from './mapGenorator.js';
 import Particle from './Old Objects/particle.js';
+import Globals from "../globals.js"
 
 class Collision {
 
@@ -64,6 +65,7 @@ class Collision {
     //Returns list of particles collided with
     static isCircleCollision(particle, x, y) {
         let collidedParticles = [];
+        console.log(Globals.gameObjects)
         for (let i = 0; i < MapGenerator.particles.length; i++) {
             if (MapGenerator.particles[i] === particle) continue;
             let dx = x - MapGenerator.particles[i].x; //x distance between the two particles

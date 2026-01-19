@@ -3,6 +3,7 @@ class Transform {
         this.self = self;
         this.x = x;
         this.y = y;
+        this.depth = 0;
         this.width = width;
         this.height = height;
         this.rotation = rotation;
