@@ -1,3 +1,5 @@
+import Globals from "../globals.js"
+
 class CircleCollider {
 
     constructor(self, spriteComponent) {
@@ -11,15 +13,19 @@ class CircleCollider {
     //Returns the first world object that intersects with the given coordinates
     intersects(x, y) {
         let intersectingObject = [];
+        const selfTransform = this.self.getComponent("Transform");
+        for (const gameObejct of Globals.gameObjects ) {
 
-        collisionObjects = World.gameObjects;
-        for (const gameObejct of collisionObjects ) {
+            //Skip collision with self
             if (gameObejct === this.self) continue;
-            if (gameObejct.depth !== this.transform.depth) continue;
-            const dx = x - gameObejct.transform.x;
-            const dy = y - gameObejct.transform.y;
+
+            const otherTransform = gameObejct.getComponent("Transform");
+            if (!otherTransform) continue;
+
+            const dx = x - otherTransform.x;
+            const dy = y - otherTransform.y;
             const distance = Math.sqrt(dx * dx + dy * dy);
-            if (distance < this.transform.width / 2 + gameObejct.transform.width / 2) {
+            if (distance < selfTransform.width / 2 + otherTransform.width / 2) {
                 intersectingObject.push(gameObejct);
             }
         }

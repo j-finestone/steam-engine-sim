@@ -10,12 +10,19 @@ class BoxCollider {
 
     intersects(x, y, gameObjects) {
         let intersectingObject = [];
-        if (typeof this.self.transform === "transform") return false;
+        const selfTransform = this.self.getComponent("Transform");
+        if (!selfTransform) return false;
+        
         for (const gameObject of gameObjects) {
-            if (gameObject === this.self.transform) continue;
-            if (gameObject.transform.depth !== this.self.transform.depth) continue;
-            if (x > gameObject.transform.x && x < gameObject.transform.x + gameObject.transform.width &&
-                y > gameObject.transform.y && y < gameObject.transform.y + gameObject.transform.height) {
+            if (gameObject === this.self) continue;
+            
+            const otherTransform = gameObject.getComponent("Transform");
+            if (!otherTransform) continue;
+            
+            if (otherTransform.depth !== selfTransform.depth) continue;
+            
+            if (x > otherTransform.x && x < otherTransform.x + otherTransform.width &&
+                y > otherTransform.y && y < otherTransform.y + otherTransform.height) {
                 intersectingObject.push(gameObject);
             }
         }

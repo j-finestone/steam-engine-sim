@@ -58,7 +58,8 @@ class Collider {
             this.generateCollisionComponents(this.gameObjects);
         }
         
-        if (this.isColliding(this.self.x, this.self.y)) {
+        const transform = this.self.getComponent("Transform");
+        if (transform && this.isColliding(transform.x, transform.y)) {
             // Handle collision
             console.log("Collision detected");
         }
