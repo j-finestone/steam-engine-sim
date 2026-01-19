@@ -2,6 +2,7 @@ import Circle from "./sprite types/circle.js";
 import Rectangle from "./sprite types/rectangle.js";
 import CircleCollider from "./circleColider.js";
 import BoxCollider from "./boxColdier.js";
+import Globals from "../globals.js";
 
 //Add this component to an object to enable collision detection
 class Collider {
@@ -18,7 +19,7 @@ class Collider {
 
     generateCollisionComponents() {  
         this.collisionComponents = [];
-        for (const worldObejct of this.gameObjects) {
+        for (const worldObejct of Globals.gameObjects) {
 
             const renderer = worldObejct.getComponent("Renderer");
 
@@ -35,6 +36,7 @@ class Collider {
                 if (spriteComponent instanceof Rectangle) {
                     this.collisionComponents.push(new BoxCollider(this.self, spriteComponent));
                 }
+                console.log("Added collision component:", this.collisionComponents[this.collisionComponents.length - 1]);
 
             }
             
@@ -48,21 +50,22 @@ class Collider {
                 collisionObjects.push(component);
             }
         }
+        //display to console when coliding
+        if (collisionObjects.length > 0) {
+            console.log("Collision objects:", collisionObjects);
+        }
         return collisionObjects.length > 0 ? collisionObjects : false;
 
     }
+    start() {
+
+        this.generateCollisionComponents(this.gameObjects);
+    }
 
     step() {
-        // Use stored gameObjects reference if available
-        if (this.gameObjects) {
-            this.generateCollisionComponents(this.gameObjects);
-        }
-        
-        const transform = this.self.getComponent("Transform");
-        if (transform && this.isColliding(transform.x, transform.y)) {
-            // Handle collision
-            console.log("Collision detected");
-        }
+    
     }
+        
+    
 }
 export default Collider;

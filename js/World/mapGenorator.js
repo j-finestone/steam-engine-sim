@@ -8,6 +8,7 @@ import Circle from "../Components/sprite types/circle.js";
 import Rectangle from "../Components/sprite types/rectangle.js";
 import Collider from "../Components/collider.js";
 import RigidBody from "../Components/rigidBody.js"
+import MouseFollower from "../Scripts/mouseFollower.js";
 
 class MapGenerator {
     constructor() {
@@ -21,6 +22,8 @@ class MapGenerator {
         this.generateCup(200, 300, "maroon"); 
 
         this.generateParticle(200, 250);
+
+        this.generateMouseFollower();
 
         // Set world reference for all components
         for (const gameObject of Globals.gameObjects) {
@@ -36,18 +39,33 @@ class MapGenerator {
         }
     }
 
+    generateMouseFollower() {   
+        let mouseFollower = World.addObject("MouseFollower");
+        mouseFollower.addComponent(new MouseFollower(mouseFollower));
+        mouseFollower.addComponent(new Transform(mouseFollower, 0, 0, 1, 1, 0));
+        mouseFollower.addComponent(new Renderer(mouseFollower));
+        mouseFollower.addComponent(new Collider(mouseFollower));
+        mouseFollower.getComponent("Renderer").addSpriteComponent(new Rectangle(0, 0, 10, 10, 0, "blue"));
+
+
+
+
+    }
+
+
     generateCup (x, y, color) {
         let barrier = World.addObject("Barrier");
-        barrier.addComponent(new Transform(barrier, x, y, 1, 1, 20));
+        barrier.addComponent(new Transform(barrier, x, y, 1, 1, 0));
         barrier.addComponent(new Renderer(barrier));
+        barrier.addComponent(new RigidBody(barrier));
+        barrier.addComponent(new Collider(barrier));
+
         // Add sprite components for the barrier
 
         barrier.getComponent("Renderer").addSpriteComponent(new Rectangle(0, 50, 210, 10, 0, color));
         barrier.getComponent("Renderer").addSpriteComponent(new Rectangle(-100, 0, 10, 100, 0, color));
         barrier.getComponent("Renderer").addSpriteComponent(new Rectangle(100, 0, 10, 100, 0, color));
 
-        //Add collider component for the barrier
-        barrier.addComponent(new Collider(barrier));
 
         return barrier;
 

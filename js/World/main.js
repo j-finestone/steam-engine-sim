@@ -20,10 +20,16 @@ function startSimulation() {
     World.clearGameObjects();
     world = new World();
     let mapGenerator = new MapGenerator(); //Generate map
+    for (const gameObject of Globals.gameObjects) {
+        for (const component of gameObject.components) {
+            if (typeof component.start === "function") {
+                component.start();
+            }
+        }
+    }
     window.requestAnimationFrame(simLoop);
 
 }
-
 
 
 

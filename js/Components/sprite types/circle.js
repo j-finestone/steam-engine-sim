@@ -16,8 +16,14 @@ class Circle {
     drawSelf(self) {
         const transform = self.getComponent("Transform");
 
-        const x = transform.x + this.x;
-        const y = transform.y + this.y;
+        //Rotate the spritescomponent ofset around the transform's rotation
+        const cos = Math.cos(transform.rotation);
+        const sin = Math.sin(transform.rotation);
+        const rotatedOffsetX = this.x * cos - this.y * sin;
+        const rotatedOffsetY = this.x * sin + this.y * cos;
+
+        const x = transform.x + rotatedOffsetX;
+        const y = transform.y + rotatedOffsetY;
         const radius = transform.width * this.radius;
 
         this.ctx.beginPath();

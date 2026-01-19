@@ -13,6 +13,14 @@ export default {
 
     //Debugging
     showPivotPoints: true,
+    
+    // Input
+    mouseX: 0,
+    mouseY: 0,
+
+
+
+    //Draw pivot points settings
     spriteComponentPivotPointRadius: 5,
     objectPivotPointRadius: 5,
     spritePivotPointColor: "rgba(119, 119, 119, 0.55)",
