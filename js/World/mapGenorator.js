@@ -37,7 +37,7 @@ class MapGenerator {
         mouseFollower.addComponent(new Collider(mouseFollower));
 
         //add sprite components
-        mouseFollower.getComponent("Renderer").addSpriteComponent(new Rectangle(0, 0, 10, 10, 0, "blue"));
+        mouseFollower.getComponent("Renderer").addSpriteComponent(new Circle(0, 0, 5, "blue"));
 
 
 

@@ -1,4 +1,5 @@
 import Globals from "../globals.js"
+import BoxCollider from "./boxColdier.js"
 
 class CircleCollider {
 
@@ -25,11 +26,30 @@ class CircleCollider {
             const otherTransform = gameObejct.getComponent("Transform");
             if (!otherTransform) continue;
 
-            const dx = x - otherTransform.x;
-            const dy = y - otherTransform.y;
-            const distance = Math.sqrt(dx * dx + dy * dy);
-            if (distance < selfTransform.width / 2 + otherTransform.width / 2) {
-                intersectingObject.push(gameObejct);
+            //Loop through all colliders of the other object
+            for (const otherCollider of gameObejct.getComponent("Collider").collisionComponents) {
+                
+                //Check collisions with rectangles
+                if (otherCollider instanceof BoxCollider) {
+                    otherCollider.calculateGlobalPosition();
+                    // Check collision between circle and rotated box
+                    if (this.checkCircleBoxCollisionAt(x, y, otherCollider, selfTransform, otherTransform)) {
+                        intersectingObject.push(gameObejct);
+                        break;
+                    }
+                }
+                
+                // Check collision with other circle colliders
+                if (otherCollider instanceof CircleCollider) {
+                    otherCollider.calculateGlobalPosition();
+                    const dx = x - otherCollider.globalX;
+                    const dy = y - otherCollider.globalY;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    if (distance < this.radius + otherCollider.radius) {
+                        intersectingObject.push(gameObejct);
+                        break;
+                    }
+                }
             }
         }
 
@@ -53,22 +73,42 @@ class CircleCollider {
         this.globalY = transform.y + rotationOffsetY;
     }
 
-    showBoundingBox() {
-        this.calculateGlobalPosition();
-        const transform = this.self.getComponent("Transform");
-        if (!transform) return;
-
-        Globals.ctx.save();
-        Globals.ctx.translate(this.globalX, this.globalY);
-        Globals.ctx.rotate(transform.rotation);
-
-
-        Globals.ctx.beginPath();
-        Globals.ctx.arc(0, 0, this.radius, 0, Math.PI * 2);
-        Globals.ctx.strokeStyle = "red";
-        Globals.ctx.stroke();
-
-        Globals.ctx.restore(); // Restore the context to its original state
+    // Check collision between circle (at x, y position) and a rotated rectangle
+    checkCircleBoxCollisionAt(x, y, boxCollider, selfTransform, otherTransform) {
+        // Calculate circle's global position at x, y
+        const cos = Math.cos(selfTransform.rotation);
+        const sin = Math.sin(selfTransform.rotation);
+        const rotationOffsetX = this.x * cos - this.y * sin;
+        const rotationOffsetY = this.x * sin + this.y * cos;
+        const circleX = x + rotationOffsetX;
+        const circleY = y + rotationOffsetY;
+        const circleRadius = this.radius * selfTransform.width; // Scale radius
+        
+        // Get the box center
+        const boxCenterX = boxCollider.globalX;
+        const boxCenterY = boxCollider.globalY;
+        const boxRotation = otherTransform.rotation;
+        
+        // Translate circle center to box's local space (unrotate it)
+        const dx = circleX - boxCenterX;
+        const dy = circleY - boxCenterY;
+        const boxCos = Math.cos(-boxRotation); // Negative to unrotate
+        const boxSin = Math.sin(-boxRotation);
+        const localX = dx * boxCos - dy * boxSin;
+        const localY = dx * boxSin + dy * boxCos;
+        
+        // Find closest point on the (unrotated) box to the circle
+        const hw = boxCollider.scaledWidth / 2;
+        const hh = boxCollider.scaledHeight / 2;
+        const closestX = Math.max(-hw, Math.min(hw, localX));
+        const closestY = Math.max(-hh, Math.min(hh, localY));
+        
+        // Check distance from circle center to closest point
+        const distX = localX - closestX;
+        const distY = localY - closestY;
+        const distanceSquared = distX * distX + distY * distY;
+        
+        return distanceSquared < (circleRadius * circleRadius);
     }
 }
 
