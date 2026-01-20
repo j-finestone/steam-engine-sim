@@ -1,4 +1,5 @@
 import Globals from "../globals.js"
+import CircleCollider from "./circleColider.js";
 class BoxCollider {
     constructor(self, spriteComponent) {
         this.self = self;
@@ -63,14 +64,23 @@ class BoxCollider {
                     }
                 }
 
+                if (otherComponent instanceof CircleCollider) {
+                    //Makes sure the other circle's position is updated
+                    otherComponent.calculateGlobalPosition();
 
-            }
-            
+                    //Check collision between rotated box and circle
+                    if (this.checkRotatedBoxCircleCollisionAt(x, y, otherComponent, selfTransform, otherTransform)) {
+                        intersectingObject.push(gameObject);
+                        break; 
+                    }
+                }
+            }       
             
         }
         return intersectingObject.length > 0 ? intersectingObject : false;
     }
 
+    //#region Rect collision Detection
     checkRotatedBoxCollisionAt(x, y, other, selfTransform, otherTransform) {
 
         //step 1: Get the 4 corners of each rotated object
@@ -189,32 +199,47 @@ class BoxCollider {
         return {min: Math.min(...dots), max: Math.max(...dots)};
     }
 
+    //#endregion
 
-
-
-
-
-
-    //Show bounding box for self
-    showBoundingBox() {
-        this.calculateGlobalPosition();
-        const transform = this.self.getComponent("Transform");
-        if (!transform) return;
+    //#region Box-Circle collision Detection
+    
+    // Check collision between a rotated rectangle and a circle
+    checkRotatedBoxCircleCollisionAt(x, y, circleCollider, selfTransform, otherTransform) {
+        // Get the circle's position and radius
+        const circleX = circleCollider.globalX;
+        const circleY = circleCollider.globalY;
+        const circleRadius = circleCollider.radius * otherTransform.width; // Scale radius
         
-        const scaledWidth = this.scaledWidth;
-        const scaledHeight = this.scaledHeight;
+        // Calculate the box center at the given position
+        const cos = Math.cos(selfTransform.rotation);
+        const sin = Math.sin(selfTransform.rotation);
+        const rotatedOffsetX = this.x * cos - this.y * sin;
+        const rotatedOffsetY = this.x * sin + this.y * cos;
+        const boxCenterX = x + rotatedOffsetX;
+        const boxCenterY = y + rotatedOffsetY;
         
-        //Account for bounding box rotation
-        Globals.ctx.save();
-        Globals.ctx.translate(this.globalX, this.globalY);
-        Globals.ctx.rotate(transform.rotation);
+        // Translate circle center to box's local space (unrotate it)
+        const dx = circleX - boxCenterX;
+        const dy = circleY - boxCenterY;
+        const localX = dx * cos + dy * sin;
+        const localY = -dx * sin + dy * cos;
         
-        Globals.ctx.strokeStyle = "red";
-        Globals.ctx.lineWidth = 2;
-        Globals.ctx.strokeRect(-scaledWidth/2, -scaledHeight/2, scaledWidth, scaledHeight);
+        // Find closest point on the (unrotated) box to the circle
+        const hw = (this.width * selfTransform.width) / 2;
+        const hh = (this.height * selfTransform.height) / 2;
+        const closestX = Math.max(-hw, Math.min(hw, localX));
+        const closestY = Math.max(-hh, Math.min(hh, localY));
         
-        Globals.ctx.restore();
+        // Check distance from circle center to closest point
+        const distX = localX - closestX;
+        const distY = localY - closestY;
+        const distanceSquared = distX * distX + distY * distY;
+        
+        return distanceSquared < (circleRadius * circleRadius);
     }
+    
+    //#endregion
+
 }
 
 export default BoxCollider;
