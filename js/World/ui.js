@@ -18,7 +18,6 @@ class UI {
 
     // Initialize UI and attach event listeners to sliders
     static initialize() {
-        console.log("===== UI.initialize() CALLED =====");
         
         // Base Heat
         const baseHeatSlider = document.getElementById('base-heat');

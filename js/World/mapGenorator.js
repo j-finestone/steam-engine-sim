@@ -21,22 +21,12 @@ class MapGenerator {
         // Create cup
         this.generateCup(200, 300, "maroon"); 
 
-        this.generateParticle(200, 250);
+        this.generateParticle(400, 250);
 
         this.generateMouseFollower();
 
-        // Set world reference for all components
-        for (const gameObject of Globals.gameObjects) {
-            gameObject.start(Globals.gameObjects);
-        }
+  
 
-        // Generate collision components for all objects after they're all created
-        for (const gameObject of Globals.gameObjects) {
-            const collider = gameObject.getComponent("Collider");
-            if (collider) {
-                collider.generateCollisionComponents(Globals.gameObjects);
-            }
-        }
     }
 
     generateMouseFollower() {   
@@ -45,6 +35,8 @@ class MapGenerator {
         mouseFollower.addComponent(new Transform(mouseFollower, 0, 0, 1, 1, 0));
         mouseFollower.addComponent(new Renderer(mouseFollower));
         mouseFollower.addComponent(new Collider(mouseFollower));
+
+        //add sprite components
         mouseFollower.getComponent("Renderer").addSpriteComponent(new Rectangle(0, 0, 10, 10, 0, "blue"));
 
 
@@ -77,8 +69,10 @@ class MapGenerator {
         particle.addComponent(new Renderer(particle));
         particle.addComponent(new Collider(particle));
         particle.addComponent(new RigidBody(particle));
-        particle.getComponent("Renderer").addSpriteComponent(new Circle(0, 0, 5, "yellow"));
         particle.addComponent(new Collider(particle));
+
+        particle.getComponent("Renderer").addSpriteComponent(new Circle(0, 25, 5, "yellow"));
+
 
 
     }

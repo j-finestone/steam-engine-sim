@@ -10,6 +10,7 @@ class RigidBody{
     
     step() {
 
+        this.self.getComponent("Transform").rotation += .01;
 
 
     }

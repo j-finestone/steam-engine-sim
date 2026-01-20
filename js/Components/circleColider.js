@@ -12,6 +12,9 @@ class CircleCollider {
 
     //Returns the first world object that intersects with the given coordinates
     intersects(x, y) {
+        this.calculateGlobalPosition();
+
+
         let intersectingObject = [];
         const selfTransform = this.self.getComponent("Transform");
         for (const gameObejct of Globals.gameObjects ) {
@@ -33,6 +36,39 @@ class CircleCollider {
         //Return the list of objects that intersect with the given coordinates
         if (intersectingObject.length === 0) {return false};
         return intersectingObject;
+    }
+
+    calculateGlobalPosition() {
+        const transform = this.self.getComponent("Transform");
+
+        //Account for bounding box rotation
+        const cos = Math.cos(transform.rotation);
+        const sin = Math.sin(transform.rotation);
+        
+        const rotationOffsetX = this.x*cos - this.y*sin;
+        const rotationOffsetY = this.x*sin + this.y*cos;
+
+        if (!transform) return;
+        this.globalX = transform.x + rotationOffsetX;
+        this.globalY = transform.y + rotationOffsetY;
+    }
+
+    showBoundingBox() {
+        this.calculateGlobalPosition();
+        const transform = this.self.getComponent("Transform");
+        if (!transform) return;
+
+        Globals.ctx.save();
+        Globals.ctx.translate(this.globalX, this.globalY);
+        Globals.ctx.rotate(transform.rotation);
+
+
+        Globals.ctx.beginPath();
+        Globals.ctx.arc(0, 0, this.radius, 0, Math.PI * 2);
+        Globals.ctx.strokeStyle = "red";
+        Globals.ctx.stroke();
+
+        Globals.ctx.restore(); // Restore the context to its original state
     }
 }
 
