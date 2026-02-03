@@ -2,7 +2,8 @@
 import Globals from "../../globals.js";
 
 class Rectangle {
-    constructor(x, y, width, height, rotation, color) {
+    constructor(parent, x, y, width, height, rotation, color) {
+        this.parent = parent;
         this.x = x;
         this.y = y;
         this.width = width;

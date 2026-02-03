@@ -3,7 +3,8 @@ import Globals from "../../globals.js";
 class Circle {
 
 
-    constructor(x, y, radius, color) {
+    constructor(parent, x, y, radius, color) {
+        this.parent = parent;
         this.x = x;
         this.y = y;
         this.radius = radius;

@@ -24,11 +24,11 @@ class MouseFollower {
         const collider = this.self.getComponent("Collider");
         const transform = this.self.getComponent("Transform");
 
-        const collisionObjects = collider.isColliding(transform.x, transform.y);
-        if (collisionObjects.length > 0) {
-            // Perform collision detection or response here
-            console.log("Colliding with objects:", collisionObjects);
-        }
+        // const collisionObjects = collider.isColliding(transform.x, transform.y);
+        // if (collisionObjects.length > 0) {
+        //     // Perform collision detection or response here
+        //     console.log("Mouse is olliding with objects:", collisionObjects);
+        // }
     }
 
 

@@ -21,7 +21,7 @@ class MapGenerator {
         // Create cup
         this.generateCup(200, 300, "maroon"); 
 
-        this.generateParticle(400, 250);
+        //this.generateParticle(400, 250);
 
         this.generateMouseFollower();
 
@@ -37,7 +37,8 @@ class MapGenerator {
         mouseFollower.addComponent(new Collider(mouseFollower));
 
         //add sprite components
-        mouseFollower.getComponent("Renderer").addSpriteComponent(new Circle(0, 0, 5, "blue"));
+        //mouseFollower.getComponent("Renderer").addSpriteComponent(new Circle(mouseFollower, 0, 0, 5, "blue"));
+        mouseFollower.getComponent("Renderer").addSpriteComponent(new Rectangle(mouseFollower, 0, 0, 5, 5, 0, "blue"));
 
 
 
@@ -54,9 +55,9 @@ class MapGenerator {
 
         // Add sprite components for the barrier
 
-        barrier.getComponent("Renderer").addSpriteComponent(new Rectangle(0, 50, 210, 10, 0, color));
-        barrier.getComponent("Renderer").addSpriteComponent(new Rectangle(-100, 0, 10, 100, 0, color));
-        barrier.getComponent("Renderer").addSpriteComponent(new Rectangle(100, 0, 10, 100, 0, color));
+        barrier.getComponent("Renderer").addSpriteComponent(new Rectangle(barrier, 0, 50, 210, 10, 0, color));
+        barrier.getComponent("Renderer").addSpriteComponent(new Rectangle(barrier, -100, 0, 10, 100, 0, color));
+        barrier.getComponent("Renderer").addSpriteComponent(new Rectangle(barrier, 100, 0, 10, 100, 0, color));
 
 
         return barrier;
@@ -71,7 +72,7 @@ class MapGenerator {
         particle.addComponent(new RigidBody(particle));
         particle.addComponent(new Collider(particle));
 
-        particle.getComponent("Renderer").addSpriteComponent(new Circle(0, 25, 5, "yellow"));
+        particle.getComponent("Renderer").addSpriteComponent(new Circle(particle, 0, 25, 5, "yellow"));
 
 
 

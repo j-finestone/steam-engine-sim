@@ -87,43 +87,6 @@ class BoxCollider {
         //Use x, y for this object's position, other uses its current position
         const corners1 = this.getRotatedCornersAt(x, y, selfTransform)
         const corners2 = other.getRotatedCornersAt(other.globalX, other.globalY, otherTransform)
-        
-        // Debug visualization: Draw corner points and outline
-        if (Globals.showPivotPoints) {
-            // Draw outline of object at mouse position (lime green)
-            Globals.ctx.strokeStyle = "lime";
-            Globals.ctx.lineWidth = 2;
-            Globals.ctx.beginPath();
-            Globals.ctx.moveTo(corners1[0].x, corners1[0].y);
-            Globals.ctx.lineTo(corners1[1].x, corners1[1].y);
-            Globals.ctx.lineTo(corners1[2].x, corners1[2].y);
-            Globals.ctx.lineTo(corners1[3].x, corners1[3].y);
-            Globals.ctx.closePath();
-            Globals.ctx.stroke();
-            
-            // Draw corners as dots
-            Globals.ctx.fillStyle = "lime";
-            corners1.forEach(c => {
-                Globals.ctx.fillRect(c.x - 3, c.y - 3, 6, 6);
-            });
-            
-            // Draw outline of other object (orange)
-            Globals.ctx.strokeStyle = "orange";
-            Globals.ctx.lineWidth = 2;
-            Globals.ctx.beginPath();
-            Globals.ctx.moveTo(corners2[0].x, corners2[0].y);
-            Globals.ctx.lineTo(corners2[1].x, corners2[1].y);
-            Globals.ctx.lineTo(corners2[2].x, corners2[2].y);
-            Globals.ctx.lineTo(corners2[3].x, corners2[3].y);
-            Globals.ctx.closePath();
-            Globals.ctx.stroke();
-            
-            // Draw corners as dots
-            Globals.ctx.fillStyle = "orange";
-            corners2.forEach(c => {
-                Globals.ctx.fillRect(c.x - 3, c.y - 3, 6, 6);
-            });
-        }
 
         //Step 2 get the axes to test (perpendicular to each edge)
         //I need to test 4 in total, 2 from each rectangle. (one per pair of parallel edges)
@@ -202,7 +165,6 @@ class BoxCollider {
     //#endregion
 
     //#region Box-Circle collision Detection
-    
     // Check collision between a rotated rectangle and a circle
     checkRotatedBoxCircleCollisionAt(x, y, circleCollider, selfTransform, otherTransform) {
         // Get the circle's position and radius
